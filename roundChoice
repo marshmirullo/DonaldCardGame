@@ -1,0 +1,35 @@
+ public class roundChoice {
+    private String [] cardChoice;
+
+    public roundChoice(String[] cardChoice) {
+        this.cardChoice = cardChoice;
+    }
+    
+    public boolean isSame(String a){
+        String [] array = cardChoice;
+        String [] inColor = new String [4];
+      int totalSame=0; //to count how many same with donald colour. if 0, meaning no cards were as donald, but the donald is still activated
+        for(int i=0; i<array.length; i++){
+            inColor[i]=getColorchoice(array[i]);
+        }
+        
+        for(int i=0; i<array.length; i++){
+            if(inColor[i].equalsIgnoreCase(a)){
+                totalSame++;
+            }
+        }
+       
+        if(totalSame>0)
+            return true;
+        else
+            return false;
+    }
+    
+      public String getColorchoice(String a){
+       String [] donaldColor = a.split(" ");
+       return donaldColor[0];
+
+        }
+    }
+
+
