@@ -1,0 +1,273 @@
+import java.util.Scanner;
+
+public class arrayCards {
+    private String[]cards;
+    private String name;
+    private String cardPick;
+    private String donaldCard;
+    private String firstPlayerCard;
+    private boolean [] hasPicked = new boolean [13]; //will update to true if it is assigned as true. note: TRUE: Card has been played. FALSE: Card has not been played yet
+    private static int total; //for valid or invalid. this way, if overall total is>0, then the card is valid. if it is 0, meaning the card entered in invalid.
+    private static int  meTeam=0;
+    public arrayCards(String[] cards,String name) {
+        this.cards = cards;
+        this.name=name;
+    }
+
+    public String[] getCards() {
+        return cards;
+    }
+    
+   public boolean teammate (String a){ //method to check if they are teammates or not
+       
+       String [] array = getCards();
+       for(int i=0; i<array.length; i++){
+           if(a.equalsIgnoreCase(array[i])){
+              return true; 
+           }
+         
+       }
+       return false;
+   }
+   
+   public void teamMyself (int index,String a, String playerName,String donaldName){ //method to check if they entered the same card or not
+       if(index==0){ 
+           meTeam=0;   //to update incase this method is played again
+       }
+       for(int i=0; i<cards.length; i++){
+           if(a.equalsIgnoreCase(cards[i])&&playerName.equals(donaldName)){
+               meTeam++;
+           }
+       }
+    
+   }
+   
+   public static boolean getTeamMyself(){
+       if(meTeam==0){
+           return false; //they did not picked their own card
+       }
+    else
+           return true;
+   }
+      
+      public String getCardPick(){
+      return this.cardPick;
+   }
+    
+   public void round (){ //command choice 2
+       Scanner sc = new Scanner(System.in);
+       int choice=0;
+       String [] array = getCards();
+      boolean notInt=true;
+      System.out.println("Which card do you want to play? (Starting from 0)");
+       while(notInt){
+        try {
+            choice = sc.nextInt();  
+            notInt=false;
+       } catch (Exception e) {
+           System.out.println("Enter an integer!");
+           sc.nextLine();
+           notInt=true;
+       }
+     }
+       if(zeroToTwelve(choice)==false){
+           System.out.println("Invalid card! choose between 0-12 only");
+           round();
+       }
+       else{
+       this.cardPick="";
+         for(int i=0; i<array.length; i++){
+             if(choice==i){
+                 this.cardPick = array[i];
+                  if(hasPicked[i]==true){
+                      System.out.println("The card has already been picked!");
+                      round();
+                  }
+                  else
+                      hasPicked[i]=true; //assigning the card as true        
+                }
+            }
+        }
+    }
+
+    public void isPicked (){
+        for(int i=0; i<cards.length; i++){
+            if(hasPicked[i]==true){
+               System.out.println("The card has already been picked!");
+            }
+        }
+    }
+   
+        public String cardPickColor(){
+        String color = getCardPick();
+        String [] split = color.split(" ");
+          
+          return split[0];
+      }
+        public void roundOthers(char mustSame, String split){ //taking the value of the first character of donald color and also the color
+        Scanner sc = new Scanner(System.in);
+        String [] array = getCards();
+       
+        int choice=0;
+        int totalHas=0; //how many total cards the player has that is the same with the first player's card color
+       
+        for(int i=0; i<array.length; i++){
+            if(array[i].charAt(0)==mustSame && hasPicked[i]==false){
+                totalHas++;
+             }
+
+         }
+         
+        this.cardPick=picked(mustSame,split);
+
+        if(totalHas>0){
+            if(this.cardPick.charAt(0)!=mustSame){
+                while(this.cardPick.charAt(0)!=mustSame){
+                System.out.println("You have a "+split+" card. You are required to enter only this color.");
+                    for(int i=0; i<array.length; i++){
+                        if(choice==i)
+                            hasPicked[i]=false;
+                  }
+
+                  this.cardPick=picked(mustSame,split);
+                    }
+                }         
+            }
+        else if(totalHas<0){
+            if(this.cardPick.charAt(0)==mustSame){
+                while(this.cardPick.charAt(0)==mustSame){
+                    System.out.println("You do not have a "+split+" card. Choose another card.");
+                    for(int i=0; i<array.length; i++){
+                        if(choice==i)
+                            hasPicked[i]=false;  //since it has been assigned as true when played, even though the card is chosen wrong, so set it back to false.
+                    }
+                       this.cardPick=picked(mustSame,split);
+                }
+            }
+        }
+    }        
+   
+   
+    public String picked(char mustSame, String split){
+            Scanner sc = new Scanner (System.in);
+            int choice=0;
+            boolean notInt=true;
+             System.out.println("Which card do you want to play? (Starting from 0)");
+               while(notInt){
+                  try {
+                    choice = sc.nextInt();  
+                    notInt=false;
+               }catch (Exception e) {
+                System.out.println("Enter an integer!");
+                sc.nextLine();
+                notInt=true;
+                }
+            }
+                    if(zeroToTwelve(choice)==false){
+                        System.out.println("Invalid card! Only pick 0-12.");
+                        roundOthers(mustSame, split);
+                    }
+                    else{
+                        this.cardPick="";
+                        for(int i=0; i<cards.length; i++ ){ /**/
+                        if(choice==i){
+                        this.cardPick = cards[i];
+                        if(hasPicked[i]==true){
+                        System.out.println("The card has already been picked!");
+                        roundOthers(mustSame, split);
+                    }
+                    else
+                      hasPicked[i]=true;
+                        }
+                    }
+                }
+            return this.cardPick;
+ }
+            private boolean zeroToTwelve(int choice){ //to check wether it is between 0-12 or not.
+                if(choice<0 || choice >12){
+                return false;
+                }
+                else 
+                return true;
+            }
+   
+    public int numDonald (String a){
+        int numDonald=0;
+        for(int i=0; i<a.length(); i++){
+            if(Character.isDigit(a.charAt(i)))
+                numDonald=(int)a.charAt(i)-'0';
+        }
+        return numDonald;
+    }
+
+    public void setDonaldPlayer (String a){ //setting donald player card
+        donaldCard = a;
+    }
+
+        public String getDonaldPlayer(){
+            return donaldCard;
+        }
+
+        public void setFirstPlayerCard (String a){ //setting first player card
+            firstPlayerCard = a;
+        }
+
+         public String getFirstPlayerCard() {
+             return firstPlayerCard;
+         }
+
+        public boolean isWinner(String a){  //determining who is the player that got the same color by checking their array
+            String [] cards = getCards();
+            for(int i=0; i<cards.length; i++){
+                if(a.equalsIgnoreCase(cards[i])){
+                    System.out.print("\nHighest rank: "+cards[i]+"\n");
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+            public String donaldColor(String a){
+            String donaldColor="";
+            String ch;
+            for(int i=0; i<a.length(); i++){
+                if(i<a.length()-2){
+                    ch=String.valueOf(a.charAt(i));
+                    donaldColor=donaldColor.concat(ch);
+                }
+            }
+            return donaldColor;
+        }
+
+        public  int donaldNumber (String a){
+            int numDonald=0;
+            for(int i=0; i<a.length(); i++){
+                if(Character.isDigit(a.charAt(i)))
+                    numDonald=(int)a.charAt(i)-'0';
+            }
+            return numDonald;
+        }
+            public void Display(){
+                System.out.println("Cards you have now: ");
+                for(int i=0; i<hasPicked.length;i++){
+                    if(hasPicked[i]==false){
+                    System.out.print(cards[i]+" ("+i+")"+" | ");
+                }
+            }
+        }
+                public void validTeam(String a,int index){
+                if(index==0){
+                total=0;
+                }
+                Scanner sc = new Scanner(System.in);
+                for(int i=0; i<cards.length; i++){
+                    if(a.equalsIgnoreCase(cards[i])){
+                    total++;
+                }
+            }
+        }
+
+        public static int getTotal(){
+            return total;
+        }
+    }
