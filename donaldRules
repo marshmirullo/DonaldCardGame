@@ -1,0 +1,43 @@
+public class donaldRules {
+    private String [] cards;
+    private boolean [] donaldPicked = new boolean [35]; 
+
+    public donaldRules(String[] cards) {
+        this.cards = cards;
+    }
+    
+    public void value (String a){
+        for(int i=0; i<this.cards.length;i++){
+            if(a.equalsIgnoreCase(cards[i])){
+                for(int j=i; j<35;j++){
+                    donaldPicked[j]=true;
+                   // System.out.print("Cards you can pick: "+cards[j]+" ");
+                }
+            }
+        }
+    }
+    
+    public String display(){
+        String card=""; //initializing card to give value for getDisplay
+        System.out.println("Cards that you can pick: ");
+        for(int i=0; i<35; i++){
+            if(donaldPicked[i]==false){
+                card=card.concat(cards[i]+" | ");
+            }
+        }
+        return card;
+    }
+    
+    
+    public boolean canPlay(String b){
+        for(int i=0; i<this.cards.length; i++){
+            if(b.equalsIgnoreCase(cards[i])){
+                if(donaldPicked[i]==true){
+                    return false;
+                }
+
+            }
+        }
+        return true;
+    }
+}
