@@ -28,7 +28,7 @@ public class arrayCards {
          
        }
        return false;
-   }
+   } 
    
    public void teamMyself (int index,String a, String playerName,String donaldName){ //method to check if they entered the same card or not
        if(index==0){ 
