@@ -1,0 +1,24 @@
+public class team {
+    private String[]cards;
+
+    public team(String[] cards) {
+        this.cards = cards;
+    }
+
+    public String[] getCards() {
+        return cards;
+    }
+
+    public void setCards(String[] cards) {
+        this.cards = cards;
+    }
+    
+    public boolean isTeammates (String a){
+        String [] teammates = getCards();
+        for(int i=0; i<teammates.length; i++){
+            if(a.equalsIgnoreCase(teammates[i]))
+                return true;
+        }
+       return false;
+    }
+}
