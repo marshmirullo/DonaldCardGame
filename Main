@@ -1,0 +1,764 @@
+package DonaldCardGame;
+
+import java.util.Random;
+import java.util.Scanner;
+
+public class Main {
+        public static void main(String[] args) {
+        Scanner sc = new Scanner (System.in);
+        String [] player = new String [4];
+        String  donaldChoice = "";          //**
+        for(int i=0; i<player.length; i++){
+                System.out.println("Player "+(i+1)+" ,please enter your name: ");
+                player[i] = sc.nextLine();
+        }
+
+        System.out.println("Constructing the cards in the deck... ");
+        wait(2000);
+        System.out.println("52 cards have been constructed");
+        wait(1000);
+        System.out.println("Shuffling the card deck....");
+        wait(3000);
+        System.out.println("Completed!");
+        System.out.println("Assigning the cards to the player...");
+        wait(2000);
+        System.out.println("Assigned, ENJOY!\n");
+        
+
+        
+        String [] deck = new String [52];
+        String [] colour = {"RED", "YELLOW", "BLUE","GREEN"};  //each color have 13 cards ,from 0 to c
+        String [] rank = {"1","2","3","4","5","6","7","8","9","10","A","B","C"};
+        for(int i=0; i<deck.length; i++){
+            deck[i]= colour[i/13] + " "+ rank[i%13];
+        }
+        
+        String ans;
+           arrayCards [] cards = new arrayCards[4]; //create an array of object that stores the player card
+        //Shuffle the deck
+        Random r = new Random();
+        for(int i=0; i<deck.length; i++){
+            int index = r.nextInt(deck.length);
+            
+            String temp = deck[i];
+            deck[i]=deck[index];
+            deck[index]=temp;
+        }
+        
+        //array player1 cards
+           String playercard="";
+            for(int i=0; i<13; i++){
+                playercard=playercard.concat(deck[i]+" | "); //we use different for loops for each player because we are assigning different index range
+                //append card by String using for loop
+            }  
+          String [] player1card = playercard.split(" \\| ");
+                //store the the card selected in loop
+          cards[0] = new arrayCards(player1card,player[0]); //creating object of arrayCards which will control the player's array of cards
+          
+          //array player2 cards
+            playercard = "";
+            for(int i=13; i<26; i++){
+              playercard=playercard.concat(deck[i]+" | ");
+            }  
+          String [] player2card = playercard.split(" \\| ");
+          cards[1]=new arrayCards(player2card,player[1]);
+          
+          //array player3 cards
+            playercard="";
+            for(int i=26; i<39; i++){
+                playercard = playercard.concat(deck[i]+" | ");
+            }
+        String [] player3card = playercard.split(" \\| "); 
+        cards[2]=new arrayCards(player3card,player[2]);
+        
+        //array player4 cards
+                 playercard = "";
+            for(int i=39; i<52; i++){
+                playercard = playercard.concat(deck[i]+" | ");
+            }      
+        String [] player4card = playercard.split(" \\| "); 
+        cards[3]=new arrayCards(player4card, player[3]);
+   
+          
+        
+        //loop for making sure everyone picks donald
+         String [] donaldPriority = {"NO DONALD 7","NO DONALD 6","NO DONALD 5","NO DONALD 4","NO DONALD 3","NO DONALD 2","NO DONALD 1"
+         ,"RED 7","YELLOW 7","BLUE 7","GREEN 7","RED 6","YELLOW 6","BLUE 6","GREEN 6","RED 5","YELLOW 5","BLUE 5","GREEN 5",
+ "RED 4","YELLOW 4","BLUE 4","GREEN 4","RED 3","YELLOW 3","BLUE 3","GREEN 3","RED 2","YELLOW 2","BLUE 2","GREEN 2",
+ "RED 1","YELLOW 1","BLUE 1","GREEN 1","Did not choose"};
+       
+        donaldRules donaldCandidates = new donaldRules(donaldPriority); //storing the donald cards in class donaldRules
+        boolean notCalled = true;
+        int totalNo=0;
+        while(notCalled){ 
+        donaldChoice=""; //so if no one called for donald, donaldChoice will become a zero string again
+        System.out.print(player[0] +" want to check your card?[YES/NO]");
+        String respond = sc.nextLine();
+        
+           if(!respond.equalsIgnoreCase("yes")&&!respond.equalsIgnoreCase("no")){
+            while(!respond.equalsIgnoreCase("yes")&& !respond.equalsIgnoreCase("no")){
+                respond=yesorNo(respond);
+            }
+        }
+        
+
+            if(respond.equalsIgnoreCase("YES")){
+                for(String value : player1card){
+                System.out.print(value+" | ");
+              }
+        }
+         
+        System.out.println("\n");
+        System.out.print(player[0] +" call for donald?[YES/NO]");
+        ans= sc.nextLine();
+        
+          if(!ans.equalsIgnoreCase("yes")&&!ans.equalsIgnoreCase("no")){
+            while(!ans.equalsIgnoreCase("yes")&& !ans.equalsIgnoreCase("no")){
+                ans=yesorNo(ans);
+            }
+        }
+          if(ans.equalsIgnoreCase("yes")){
+              String choice0=donald(ans);
+              donaldCandidates.value(choice0);//setting the first donald card candidate so that the card with lower values cannot be played
+              System.out.println(player[0]+" chose: "+choice0.toUpperCase());
+              donaldChoice=donaldChoice.concat(choice0+",");
+          }
+          if(ans.equalsIgnoreCase("no")){
+              donaldChoice = donaldChoice.concat("no,");
+              totalNo++;
+          }
+        System.out.print("\n" + player[1] +" want to check your card?[YES/NO]");
+        respond= sc.nextLine();
+        
+         if(!respond.equalsIgnoreCase("yes")&&!respond.equalsIgnoreCase("no")){
+            while(!respond.equalsIgnoreCase("yes")&& !respond.equalsIgnoreCase("no")){
+                respond=yesorNo(ans);
+            }
+        }
+
+                      
+           if(respond.equalsIgnoreCase("YES")){
+            for(String value : player2card){
+                System.out.print(value+" | ");
+            }
+        
+       }
+          
+        System.out.println("\n");
+        System.out.print(player[1] +" call for donald?[YES/NO]");
+        ans= sc.nextLine();
+          if(!ans.equalsIgnoreCase("yes")&&!ans.equalsIgnoreCase("no")){
+            while(!ans.equalsIgnoreCase("yes")&& !ans.equalsIgnoreCase("no")){
+                ans=yesorNo(ans);
+            }
+        }
+          if(ans.equalsIgnoreCase("yes"))
+          {
+              String choice1;
+              choice1=donald(ans);
+              
+             if(donaldCandidates.canPlay(choice1)==false){
+                 while(donaldCandidates.canPlay(choice1)==false){
+                  System.out.println("You must choose a higher donald value");
+                  String a = donaldCandidates.display();
+                     System.out.println(a);
+                  if(a.equalsIgnoreCase("")){
+                      System.out.println("There is no card that you can choose.");
+                      donaldChoice=donaldChoice.concat("no,");
+                      break;
+                  }
+                  
+                  choice1=donald(ans);
+                 }
+             }
+          
+              if(donaldCandidates.canPlay(choice1)==true){
+                  donaldCandidates.value(choice1);
+              System.out.println(player[1]+" chose: "+choice1.toUpperCase());
+              donaldChoice=donaldChoice.concat(choice1+",");
+               
+              }
+          }
+          if(ans.equalsIgnoreCase("no")){
+              donaldChoice=donaldChoice.concat("no,");
+              totalNo++;
+          }
+        
+        System.out.print("\n"+player[2] +" want to check your card?[YES/NO]");
+        respond = sc.nextLine();
+         if(!respond.equalsIgnoreCase("yes")&&!respond.equalsIgnoreCase("no")){
+            while(!respond.equalsIgnoreCase("yes")&& !respond.equalsIgnoreCase("no")){
+                respond=yesorNo(ans);
+            }
+        }
+         
+        if(respond.equalsIgnoreCase("YES")){
+            for(String value : player3card){
+               System.out.print(value+" | ");
+            }
+        }
+        
+        System.out.println("\n");
+        System.out.print(player[2] +" call for donald?[YES/NO]");
+        ans= sc.nextLine();
+          if(!ans.equalsIgnoreCase("yes")&&!ans.equalsIgnoreCase("no")){
+            while(!ans.equalsIgnoreCase("yes")&& !ans.equalsIgnoreCase("no")){
+                ans=yesorNo(ans);
+            }
+        }
+          if(ans.equalsIgnoreCase("yes"))
+          {
+              String choice2;
+              choice2=donald(ans);
+              
+             if(donaldCandidates.canPlay(choice2)==false){
+                 while(donaldCandidates.canPlay(choice2)==false){
+                  System.out.println("You must choose a higher donald value");
+                  String a = donaldCandidates.display();
+                  System.out.println(a);
+                  if(a.equalsIgnoreCase("")){
+                      System.out.println("There is no card that you can choose.");
+                      donaldChoice=donaldChoice.concat("no,");
+                      break;
+                  }
+                  choice2=donald(ans);
+
+                 }
+             }
+              if(donaldCandidates.canPlay(choice2)==true){
+                  donaldCandidates.value(choice2);
+              System.out.println(player[2]+" chose: "+choice2.toUpperCase());
+              donaldChoice=donaldChoice.concat(choice2+",");
+               
+              }
+          }
+          if(ans.equalsIgnoreCase("no")){
+              donaldChoice=donaldChoice.concat("no,");
+              totalNo++;
+          }
+        System.out.print("\n"+ player[3] +" want to check your card?[YES/NO]");
+        respond = sc.nextLine();
+         if(!respond.equalsIgnoreCase("yes")&&!respond.equalsIgnoreCase("no")){
+            while(!respond.equalsIgnoreCase("yes")&& !respond.equalsIgnoreCase("no")){
+                respond=yesorNo(ans);
+            }
+        }
+        
+            if(respond.equalsIgnoreCase("YES")){
+                for(String value : player4card){
+                    System.out.print(value+" | ");
+                }                   
+            }
+        System.out.println("\n");
+        System.out.print(player[3]+" call for donald?[YES/NO]");
+        ans= sc.nextLine();
+          if(!ans.equalsIgnoreCase("yes")&&!ans.equalsIgnoreCase("no")){
+            while(!ans.equalsIgnoreCase("yes")&& !ans.equalsIgnoreCase("no")){
+                ans=yesorNo(ans);
+            }
+        }
+          if(ans.equalsIgnoreCase("yes"))
+          {
+              String choice3;
+              choice3=donald(ans);
+
+              
+             if(donaldCandidates.canPlay(choice3)==false){
+                 while(donaldCandidates.canPlay(choice3)==false){
+                  System.out.println("You must choose a higher donald value");
+                  String a = donaldCandidates.display();
+                     System.out.println(a);
+                  if(a.equalsIgnoreCase("")){
+                      System.out.println("There is no card that you can choose.");
+                      donaldChoice=donaldChoice.concat("no,");
+                      break;
+                  }
+                  choice3=donald(ans);
+                  if(donaldCandidates.canPlay(choice3)==true){
+                     break;
+                  }
+                 }
+             }
+              if(donaldCandidates.canPlay(choice3)==true){
+                  donaldCandidates.value(choice3);
+              System.out.println(player[3]+" chose: "+choice3.toUpperCase());
+              donaldChoice=donaldChoice.concat(choice3+",");
+               
+              }
+          }
+          
+          if(ans.equalsIgnoreCase("no"))
+          {
+              donaldChoice=donaldChoice.concat("no,");
+              totalNo++;
+          }
+
+        if(totalNo!=4){
+            notCalled=false;
+            break;
+        }
+        else if(totalNo==4){
+            System.out.println("\nSomeone must call for donald!");
+            notCalled=true;
+        }
+
+          
+      }
+            String [] donaldCards = donaldChoice.split(",");
+
+         for(int i=0; i<donaldCards.length; i++){
+             donaldCards[i]=donaldCards[i].toUpperCase();
+         }
+          
+        String [] donaldPlayer = new String [1];
+        String [] finalDonald = new String [1];
+        int [] index = new int [4];
+        
+        
+        for(int i=0; i<donaldCards.length; i++){
+            for(int j=0; j<donaldPriority.length; j++){
+                if(donaldCards[i].equalsIgnoreCase(donaldPriority[j])){
+                    index[i]=j;
+                }
+                else if(donaldCards[i].equalsIgnoreCase("no"))
+                    index[i]=35;
+            }
+        }
+       int min=index[0]; //the minimum index will be the donald
+       for(int i=0; i<donaldCards.length; i++){
+           if(index[i]<min){
+               min=index[i];
+           }
+       }
+       for(int i=0; i<donaldPriority.length; i++){
+           if(min==i){
+               finalDonald[0]=donaldPriority[i];
+    
+           }
+       }
+
+       for(int i=0; i<donaldCards.length; i++){
+           if(donaldCards[i].equalsIgnoreCase(finalDonald[0])){
+               donaldPlayer[0]=player[i];
+           }
+           
+         }
+       String team;
+        //donaldCandidates = new donaldRules(donaldPriority); //initializing back donaldCandidates so it doesnt affect other cards
+        System.out.println("\n"+donaldPlayer[0]+" would be the donald.");
+        System.out.println(donaldPlayer[0]+" choose your teammate \nBy entering \"Colour Rank\" of someone's card (MAKE SURE TO NOT PICK YOUR OWN CARD)");
+        team = sc.nextLine();
+        
+        for(int i=0;i<player.length;i++){
+            cards[i].validTeam(team,i);
+        } //this loop is to check if the choice picked is valid or not. if static total ==0, means that the card picked by user is invalid
+        
+        int totalValid=0;        
+        for(int i=0; i<player.length;){
+        totalValid=cards[0].getTotal();//since it is static, the value of getTotal will be the same for all objects
+            if(totalValid==0){
+                System.out.println("Invalid card. Example choice: RED 7");
+                team=sc.nextLine();
+                for(int j=0;j<player.length;j++){
+                    cards[j].validTeam(team,j);
+                }   
+               continue;
+            }
+            if(totalValid>0){
+                break;
+            }
+            i++;
+        }
+        team.toUpperCase();
+        String [] teamOne = new String [2];
+        
+        String team2="";
+        teamOne[0]=donaldPlayer[0];
+        //determining team & making sure the donald player does not pick their own card.
+        boolean isTeam=true;
+        boolean meTeam=true;
+             for(int i=0; i<player.length; i++){ //check if they played their own card
+                cards[i].teamMyself(i,team,player[i],donaldPlayer[0]);
+                meTeam=cards[i].getTeamMyself();
+             }
+               
+           if(meTeam==true) { //meTeam true means they played their own card. 
+             while(meTeam==true){
+                  System.out.println("You entered your own card. Please pick another player's card!");
+                  team=sc.nextLine();
+                          for(int i=0;i<player.length;i++){
+                          cards[i].validTeam(team,i);
+                          } //this loop is to check if the choice picked is valid or not. if static total ==0, means that the card picked by user is invalid
+        
+                            totalValid=0;   
+                            while(totalValid==0){
+                            totalValid=cards[0].getTotal();//since it is static, the value of getTotal will be the same for all objects
+                            if(totalValid==0){
+                                System.out.println("Invalid card. Example choice: RED 7");
+                                team=sc.nextLine();
+                                for(int j=0;j<player.length;j++){
+                                cards[j].validTeam(team,j);
+                                }   
+                            }
+                            else if(totalValid>0){
+                            break;
+                            }                          
+                        }                        
+                  for(int i=0; i<player.length; i++){
+                  cards[i].teamMyself(i,team, player[i], donaldPlayer[0]);
+                  meTeam=cards[i].getTeamMyself();
+                  }
+                  
+                 }
+           }
+  //here meTeam is false, meaning they did not picked their own card
+          for(int i=0; i<player.length; i++){
+            isTeam = cards[i].teammate(team);
+             if(isTeam==true && !player[i].equalsIgnoreCase(donaldPlayer[0])){
+                   teamOne[1]=player[i];
+             }
+
+             else if(isTeam==false && !player[i].equalsIgnoreCase(donaldPlayer[0])){
+                    team2=team2.concat(player[i]+",");
+                  //  System.out.println(team2);
+             }
+        }
+        String [] teamTwo = team2.split(",");
+        //creating object for team class. the class consist of array of teammates
+        team [] teamMates = new team[2];
+        teamMates[0] = new team (teamOne);
+        teamMates[1] = new team(teamTwo);
+     
+        System.out.println("\nTeam One");
+        for(String value3 : teamOne){
+            System.out.print(value3+" ");
+        }
+        System.out.println("\nTeam Two");
+        for(String value4 : teamTwo){
+            System.out.print(value4+" ");
+        }
+        
+        int donaldNumber = numDonald(finalDonald[0]);
+        String donaldColor = getColor(finalDonald[0]); //try buat class for color****
+        int totalOne =6+donaldNumber;
+        int totalTwo =8-donaldNumber;
+        System.out.println("\n---ROUNDS---");
+        System.out.println("\nTeam 1: You will have to complete "+totalOne+" rounds to win");
+        System.out.println("Team 2: You will have to complete "+totalTwo+" rounds to win");
+        int firstPlayer=0;
+        for(int i=0; i<donaldCards.length; i++){
+           if(donaldCards[i].equalsIgnoreCase(finalDonald[0])){
+                firstPlayer=i;
+           }         
+         }
+        String donaldPlayerCard="";
+        //round for overall game
+        boolean donaldActivated=false;
+        int round=0;
+        while(totalOne>0 || totalTwo>0){
+          round++;
+         System.out.println("\nROUND "+round);
+         System.out.println("\n\nDonald is played: "+donaldActivated);
+         System.out.println("Donald Number is "+donaldNumber);
+         System.out.println("Donald Colour is "+donaldColor);
+         System.out.println("Donald Player is "+donaldPlayer[0]);
+      
+    //sorting player 1 based on winner/donald player
+     for(int i=firstPlayer; i>0; i--){
+         
+         String temp = player[i];
+         player[i]=player[i-1];
+         player[i-1]=temp;
+     }
+     
+     for(int i=firstPlayer; i>0; i--){
+         arrayCards temp = cards[i]; //since the data type for cards[i] is the class
+         cards[i]=cards[i-1];
+         cards[i-1]=temp;
+     }
+            String [] cardChoice = new String [4];
+            String cardPicked1=""; //firstplayer
+            String cardPicked2=""; //therest
+            for(int i=0; i<4;){ //loop for every player's turn  
+                boolean notCase2=true;
+            System.out.println("\n****"+player[i].toUpperCase()+"'s turn****");
+            command();
+            String commandChoice = sc.nextLine();
+        while(notCase2){           
+            switch(commandChoice){
+                case "1":
+                    if(i==0){
+                    cards[i].round(); //calling the round method(which will only display and not return anything yet). this one is for the first player
+                    cardPicked1 = cards[i].getCardPick();//storing the cardPick returned by the method in a string so that the value can be stored in cardChoice array.
+                    System.out.println(player[i]+" has played "+cardPicked1);
+                    cardChoice[i]=cardPicked1;
+                   }
+                   else{
+                      // String [] splitPlayer = cardPicked.split(" "); //splitting to get the color only of the card 
+                    char mustSame = cardPicked1.charAt(0);
+                    cards[i].roundOthers(mustSame,getColor(cardPicked1));//another method for the other players, it will follow the rules by following the first player's card.
+                    cardPicked2 = cards[i].getCardPick();
+                    System.out.println(player[i]+" has played "+cardPicked2);
+                    cardChoice[i]=cardPicked2;
+                    }
+                    notCase2=false;
+                    break;
+                case "2":
+                    System.out.println("Team one has "+totalOne+" rounds left");
+                    System.out.println("Team two has "+totalTwo+" rounds left");
+                    notCase2=true;
+                    break;
+                case "3":
+                    System.out.println("Hand card");
+                    cards[i].Display();
+                    notCase2=true;
+                    break;
+                default:
+                    System.out.println("Invalid command!");
+                    notCase2=true;
+                    break;
+                }
+            if(notCase2==false){
+            break;
+            }
+            command(); // calling command method for players to choose from
+            commandChoice = sc.nextLine(); 
+        }
+        i++;
+        if(i>4){
+          break; //all players have played their card , break out of switch case
+        }
+    }
+            System.out.println("\nThe cards chosen:");   
+            for(String value3 : cardChoice){ //cardChoice store in array
+            System.out.print(value3+" ");
+            }
+           //assigning donald player's card color so that if it is played, the donald is activated.
+            for(int i=0; i<cardChoice.length; i++){
+                if(donaldPlayer[0].equalsIgnoreCase(player[i])){ //asigning player[i] as the donaldPlayer
+                    donaldPlayer[0]=player[i];
+                    donaldPlayerCard=cardChoice[i]; //assigning their choice of card as the donaldCard
+                    //System.out.println(donaldPlayerCard);
+              }             
+          }
+          
+            for(int i=0; i<cardChoice.length; i++){
+                if(getColor(donaldPlayerCard).equalsIgnoreCase(donaldColor)) //check is donaldPlayerCard we just assigned is finally played or not
+                    donaldActivated=true;
+          }
+            String winnerCard;
+            String winner ="";
+            roundChoice cardChosen = new roundChoice(cardChoice);
+            if(donaldActivated==true){
+                if(cardChosen.isSame(donaldColor)){ //when donald is activated, if the colour is played, then compare with donald colour
+                winnerCard=Compute(cardChoice,finalDonald[0]);//example red dgn final donald as red 
+                    }
+            else{
+                winnerCard=Compute(cardChoice,cardChoice[0]); //this happens when donald is activated but the colour is not picked (for the next rounds)
+                //compute card by comparing that is not donald card but it is activated
+                    }
+            for(int i=0; i<cardChoice.length; i++){
+                  if(cards[i].isWinner(winnerCard)){
+                  winner=player[i]; 
+                    }
+                }
+            }
+          else if(donaldActivated==false){
+              winnerCard=Compute(cardChoice,cardChoice[0]);
+              //System.out.println(winnerCard);
+              for(int i=0; i<cardChoice.length; i++){
+                  if(cards[i].isWinner(winnerCard)){
+                  winner=player[i];
+                  }
+              }
+          }
+              System.out.println("\nWinner for round "+round+" is : "+winner);
+          
+          //decrement based on winner
+            if(teamMates[0].isTeammates(winner))
+                totalOne--;
+            else if(teamMates[1].isTeammates(winner))
+                totalTwo--;
+            System.out.println("\n---RESULT---");
+            System.out.println("Team 1 has "+totalOne+" rounds left");
+            System.out.println("Team 2 has "+totalTwo+" rounds left");
+            //arranging the first player with winner
+            for(int i=0; i<cardChoice.length; i++){
+            if(winner.equalsIgnoreCase(player[i])){
+                  firstPlayer=i;
+                }         
+            }          
+            if(totalOne==0){
+              break;
+            }
+            else if(totalTwo==0){
+              break;
+            }
+        }
+    if(totalOne==0){
+      System.out.println("Team one wins!");
+    }
+    else if(totalTwo==0){
+        System.out.println("Team two wins!");
+        }
+    }       
+    //methods
+       public static void wait(int ms){
+            try{
+                Thread.sleep(ms);
+            }catch(InterruptedException ex){
+                Thread.currentThread().interrupt();
+            }
+        } 
+    public static int donaldvalue (){ //trycatch method, will catch the error if the user enters something beside than integer
+        Scanner sc = new Scanner (System.in);
+        System.out.println("\nEnter the number of donald:[1-7]");
+        int donaldvalue = 0;
+        boolean notInt=true;
+        while(notInt){ //will continue the loop as notInt remains true
+           try{
+        donaldvalue = sc.nextInt(); //if we enter a string, an exception error would occur. so instead of that, we will catch the error..(sambungan kat bahagian exception)
+        notInt=false; //notInt will become false once the user enters an integer
+           
+        if (donaldvalue < 1 || donaldvalue > 7) { //this will check wether if its within the bond or not. (luar try catch pun boleh)
+            while (donaldvalue < 1 || donaldvalue > 7) {
+                int ans = oneToSeven(donaldvalue);
+                if (ans>0 && ans<8){
+                    donaldvalue = ans;//update the donaldvalue
+                    break;
+                    }
+                }
+            }
+        }catch(Exception e ){//..to here. So instead of java stopping the program, kita printout a message and set notInt as true, means the while loop will still continue till the user enters an integer
+               System.out.println("Enter an integer!");
+               sc.nextLine();
+               notInt=true;
+            }
+        }
+      return donaldvalue;
+    }
+
+    public static String donald (String yes) {
+        Scanner sc = new Scanner(System.in);
+        String donald = "";
+        int answer=donaldvalue();
+        
+        System.out.println("\nEnter the donald:[RED,YELLOW,BLUE,GREEN,NO DONALD]");
+        String donaldcolour = sc.nextLine();
+
+        if(!donaldcolour.equalsIgnoreCase("red" )&& !donaldcolour.equalsIgnoreCase("yellow") &&
+                !donaldcolour.equalsIgnoreCase("blue")&& !donaldcolour.equalsIgnoreCase("green") &&
+                (!donaldcolour.equalsIgnoreCase("no"))){
+            while(!donaldcolour.equalsIgnoreCase("red" )&& !donaldcolour.equalsIgnoreCase("yellow") &&
+                    !donaldcolour.equalsIgnoreCase("blue")&& !donaldcolour.equalsIgnoreCase("green") &&
+                    (!donaldcolour.equalsIgnoreCase("no donald"))){
+                donaldcolour=colour(donaldcolour);
+            }
+        }
+        donald = donaldcolour + " " + answer;
+        return donald;
+        }
+    
+    public static String yesorNo (String a){
+        Scanner sc = new Scanner (System.in);
+        System.out.println("\nEnter yes or no only!");
+        System.out.println("\n**[YES/NO]");
+        String ans = sc.nextLine();
+        return ans;
+    }
+    
+    public static void command (){
+        System.out.println("\nPlease enter your command:");
+        System.out.println("1 : Play Card");
+        System.out.println("2 : Show current rounds left");
+        System.out.println("3 : Show hand card");
+    }
+
+    public static int oneToSeven(int a){
+        Scanner sc = new Scanner (System.in);
+        System.out.println("\nEnter 1-7 only!");
+        System.out.println("\nEnter 1-7");
+        int ans = sc.nextInt();
+        return ans;
+    }
+
+    public static String colour (String a){
+        Scanner sc = new Scanner(System.in);
+        System.out.println("\nEnter RED/YELLOW/BLUE/GREEN/NO DONALD only!");
+        System.out.println("\nEnter the Donald: RED/YELLOW/BLUE/GREEN/NO DONALD");
+        String ans = sc.nextLine();
+        return ans;
+    }
+
+   public static int numDonald (String a){
+      int numDonald=0;
+       for(int i=0; i<a.length(); i++){
+           if(Character.isDigit(a.charAt(i)))
+               numDonald=(int)a.charAt(i)-'0';
+       }
+       return numDonald;
+   }
+
+       public static String getColor(String a){
+       String [] donaldColor = a.split(" ");
+       return donaldColor[0];
+    }
+   
+        public static String Compute(String [] cards, String card){
+        String [] defaultPriority = {"1","2","3","4","5","6","7","8","9","10","A","B","C"};
+        String donaldColor = getColor(card);
+        String [] intoColor = new String [4];
+        String donaldPicked="";
+        
+        for(int i=0; i<cards.length; i++){
+        intoColor[i]=getColor(cards[i]);
+        }
+        
+        for(int i=0; i<cards.length; i++){
+          if(intoColor[i].equalsIgnoreCase(donaldColor)){// [[BLUE,RED,BLUE,BLUE]]
+              donaldPicked=donaldPicked.concat(cards[i]+","); //[BLUE 7, BLUE 3, BLUE B]
+          }
+      } //donaldPicked = BLUE 7,BLUE 3,BLUE B
+        
+      String [] donaldPickedArray = donaldPicked.split(","); //arrays of the chosen donald card
+
+      String charPicked=""; 
+      for(int i=0; i<donaldPickedArray.length; i++){
+          String [] str = donaldPickedArray[i].split(" "); //splitting donaldPickedArray. eg: donaldPickedArray[BLUE 9, BLUE 10] str will be [BLUE,9] AND [BLUE,10]
+          charPicked = charPicked.concat(str[1]+" ");//from [BLUE,9] it takes index 1, that is 9.
+      }
+      //charPicked = 7 3 B 
+      String [] charPickedSplit = charPicked.split(" "); //[7,3,B]
+
+      int [] index = new int[charPickedSplit.length]; //to know which index is the donald card's last char in the default priority array//length is based on charPickedSplit because we dont know how many ppl played donald color
+      for(int i=0; i<index.length; i++){ //i=0
+          for(int j=0; j<defaultPriority.length; j++){
+             if(charPickedSplit[i].equalsIgnoreCase(defaultPriority[j])){
+             index[i]=j;  
+            }
+        }
+    }
+      
+        int max=index[0]; //max will become the winner
+        for(int i=0; i<index.length; i++){
+            if(max<index[i]){
+                max=index[i];
+            }
+        }
+
+        String winnerChar=""; 
+        for(int i=0; i<defaultPriority.length; i++){
+             if(max==i){ //max=11
+             winnerChar=defaultPriority[i];  //winnerChar = B
+            }
+        }
+         
+        String winner="";
+        for(int i=0; i<charPickedSplit.length; i++){
+         /*B*/  if(winnerChar.equalsIgnoreCase(charPickedSplit[i])){ //[7, 3, B]
+                winner = donaldPickedArray[i];
+              }//[BLUE 7... BLUE 3... BLUE B]
+          }
+      return winner;
+   }
+}
